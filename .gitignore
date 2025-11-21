@@ -49,4 +49,10 @@ po/*~
 rsconnect/
 
 # 
-data/
+#data/
+
+ENUNCIADO_taller_EVALUABLE_ABB_soluciones.html.md
+ENUNCIADO_taller_EVALUABLE_ABB_soluciones.html
+ENUNCIADO_taller_EVALUABLE_ABB_soluciones.qmd
+
+ENUNCIADO_taller_EVALUABLE_ABB_soluciones-files/
