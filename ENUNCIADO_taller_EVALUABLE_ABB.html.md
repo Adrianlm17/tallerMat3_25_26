@@ -349,10 +349,11 @@ Presenta los resultados con una tabla de kableExtra.
 ::: {.cell}
 
 ```{.r .cell-code}
-# --- Solución Pregunta 1 (chunk ejecutable) ---
+# Librerias
 library(dplyr)
 library(kableExtra)
 
+# Calculamos las estadísticas descriptivas por municipio y periodo
 res_p1 <- listings0 %>%
   group_by(neighbourhood_cleansed, date) %>%
   summarise(
@@ -369,40 +370,41 @@ res_p1 <- listings0 %>%
   ) %>%
   arrange(neighbourhood_cleansed, date)
 
-# Tabla estilo blanco + gris suave + texto negro
+# Creamos una tabla de estilo blanco + gris suave + texto negro
 res_p1 %>%
   kbl(
-    caption = "Estadísticos descriptivos de price y number_of_reviews por municipio y periodo",
+    caption = "Estadistica descriptiva de 'price' y 'number_of_reviews' por municipio y periodo",
     digits = 2,
     align = "lcccccccc",
     booktabs = TRUE
   ) %>%
   kable_styling(
-    full_width = FALSE,
+    full_width = TRUE,
     bootstrap_options = c("hover"),
     position = "center",
     font_size = 14
   ) %>%
   row_spec(0, bold = TRUE, background = "#FFFFFF", color = "black") %>%         # Encabezado
-  row_spec(1:nrow(res_p1), background = c("#FFFFFF", "#F5F5F5"), color = "black") # Filas alternas
+  row_spec(1:nrow(res_p1), background = c("#FFFFFF", "#F5F5F5"), color = "black") %>% # Filas alternas
+  scroll_box(height = "500px", width = "100%")
 ```
 
 ::: {.cell-output-display}
 `````{=html}
-<table class="table table-hover" style="font-size: 14px; width: auto !important; margin-left: auto; margin-right: auto;">
-<caption style="font-size: initial !important;">Estadísticos descriptivos de price y number_of_reviews por municipio y periodo</caption>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; overflow-x: scroll; width:100%; "><table class="table table-hover" style="font-size: 14px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">Estadistica descriptiva de 'price' y 'number_of_reviews' por municipio y periodo</caption>
  <thead>
   <tr>
-   <th style="text-align:left;font-weight: bold;color: black !important;background-color: rgba(255, 255, 255, 255) !important;"> neighbourhood_cleansed </th>
-   <th style="text-align:center;font-weight: bold;color: black !important;background-color: rgba(255, 255, 255, 255) !important;"> date </th>
-   <th style="text-align:center;font-weight: bold;color: black !important;background-color: rgba(255, 255, 255, 255) !important;"> mean_price </th>
-   <th style="text-align:center;font-weight: bold;color: black !important;background-color: rgba(255, 255, 255, 255) !important;"> sd_price </th>
-   <th style="text-align:center;font-weight: bold;color: black !important;background-color: rgba(255, 255, 255, 255) !important;"> min_price </th>
-   <th style="text-align:center;font-weight: bold;color: black !important;background-color: rgba(255, 255, 255, 255) !important;"> max_price </th>
-   <th style="text-align:center;font-weight: bold;color: black !important;background-color: rgba(255, 255, 255, 255) !important;"> mean_reviews </th>
-   <th style="text-align:center;font-weight: bold;color: black !important;background-color: rgba(255, 255, 255, 255) !important;"> sd_reviews </th>
-   <th style="text-align:center;font-weight: bold;color: black !important;background-color: rgba(255, 255, 255, 255) !important;"> min_reviews </th>
-   <th style="text-align:left;font-weight: bold;color: black !important;background-color: rgba(255, 255, 255, 255) !important;"> max_reviews </th>
+   <th style="text-align:left;font-weight: bold;color: black !important;background-color: rgba(255, 255, 255, 255) !important;position: sticky; top:0; background-color: #FFFFFF;"> neighbourhood_cleansed </th>
+   <th style="text-align:center;font-weight: bold;color: black !important;background-color: rgba(255, 255, 255, 255) !important;position: sticky; top:0; background-color: #FFFFFF;"> date </th>
+   <th style="text-align:center;font-weight: bold;color: black !important;background-color: rgba(255, 255, 255, 255) !important;position: sticky; top:0; background-color: #FFFFFF;"> mean_price </th>
+   <th style="text-align:center;font-weight: bold;color: black !important;background-color: rgba(255, 255, 255, 255) !important;position: sticky; top:0; background-color: #FFFFFF;"> sd_price </th>
+   <th style="text-align:center;font-weight: bold;color: black !important;background-color: rgba(255, 255, 255, 255) !important;position: sticky; top:0; background-color: #FFFFFF;"> min_price </th>
+   <th style="text-align:center;font-weight: bold;color: black !important;background-color: rgba(255, 255, 255, 255) !important;position: sticky; top:0; background-color: #FFFFFF;"> max_price </th>
+   <th style="text-align:center;font-weight: bold;color: black !important;background-color: rgba(255, 255, 255, 255) !important;position: sticky; top:0; background-color: #FFFFFF;"> mean_reviews </th>
+   <th style="text-align:center;font-weight: bold;color: black !important;background-color: rgba(255, 255, 255, 255) !important;position: sticky; top:0; background-color: #FFFFFF;"> sd_reviews </th>
+   <th style="text-align:center;font-weight: bold;color: black !important;background-color: rgba(255, 255, 255, 255) !important;position: sticky; top:0; background-color: #FFFFFF;"> min_reviews </th>
+   <th style="text-align:left;font-weight: bold;color: black !important;background-color: rgba(255, 255, 255, 255) !important;position: sticky; top:0; background-color: #FFFFFF;"> max_reviews </th>
   </tr>
  </thead>
 <tbody>
@@ -5495,14 +5497,10 @@ res_p1 %>%
    <td style="text-align:left;color: black !important;background-color: rgba(255, 255, 255, 255) !important;"> 123 </td>
   </tr>
 </tbody>
-</table>
+</table></div>
 
 `````
 :::
-
-```{.r .cell-code}
-# --- fin chunk ---
-```
 :::
 
 
@@ -5519,93 +5517,77 @@ Pollença
 ::: {.cell}
 
 ```{.r .cell-code}
-# --- Librerías ---
+# Librerías
 library(dplyr)
 library(ggplot2)
+library(patchwork)
 
-# --- Función corregida y robusta ---
-plot_distribution <- function(data, variable, location, date_filter = NULL, price_filter = NULL) {
-  # Filtrar por fecha si se especifica
-  if (!is.null(date_filter)) {
-    data <- data %>% filter(date == as.Date(date_filter))
-  }
-  
-  # Filtrar por rango de precios si se especifica
-  if (!is.null(price_filter)) {
-    data <- data %>%
-      filter(!!sym(variable) > price_filter[1], !!sym(variable) < price_filter[2])
-  }
-  
-  # Filtrar por vecindario
-  data_loc <- data %>% filter(neighbourhood_cleansed == location)
-  
-  # Comprobar si hay datos
-  if (nrow(data_loc) == 0) {
-    message(paste("No hay datos para", location, "con los filtros aplicados."))
-    return(NULL)
-  }
-  
-  # Calcular media y desviación estándar
-  mean_val <- mean(data_loc[[variable]], na.rm = TRUE)
-  sd_val <- sd(data_loc[[variable]], na.rm = TRUE)
-  
-  # Crear gráfico
-  ggplot(data_loc, aes(x = .data[[variable]])) +
-    geom_histogram(aes(y = ..density..), bins = 30, fill = "lightblue", color = "black", alpha = 0.7) +
-    geom_density(color = "red", size = 1) +
-    stat_function(
-      fun = function(x) dnorm(x, mean = mean_val, sd = sd_val),
-      color = "blue", size = 1, linetype = "dashed"
-    ) +
-    labs(
-      title = paste("Distribución de", variable, "en", location),
-      x = variable,
-      y = "Densidad"
-    ) +
-    theme_minimal()
-}
-
-# --- Graficar para price en Palma y Pollença ---
-plot_distribution(listings0, "price", "Palma", date_filter = "2024-09-13", price_filter = c(50, 400))
+# Revisamos las fechas disponibles
+unique(listings0$date)
 ```
 
 ::: {.cell-output .cell-output-stdout}
 
 ```
-NULL
+[1] "2023-12-17" "2024-03-23" "2024-06-19" "2024-09-13" "2024-12-14"
+[6] "2025-03-07" "2025-06-15" "2025-09-21"
 ```
 
 
 :::
 
 ```{.r .cell-code}
-plot_distribution(listings0, "price", "Pollença", date_filter = "2024-09-13", price_filter = c(50, 400))
+# Elegimos una fecha que exista, por ejemplo la última
+fecha_filtrar <- max(listings0$date)
+
+# Filtramos los datos
+datos_p2 <- listings0 %>%
+  filter(date == fecha_filtrar,
+         neighbourhood_cleansed %in% c("Palma de Mallorca", "Pollença"))
+
+# Creamos una función para graficar la distribución con histograma + densidad kernel + normal
+graficar_distribucion <- function(df, variable, municipio, min_val = -Inf, max_val = Inf) {
+  
+  df_mun <- df %>% filter(neighbourhood_cleansed == municipio)
+  x_vals <- df_mun[[variable]]
+  x_vals <- x_vals[!is.na(x_vals)] # quitar NA
+  x_vals <- x_vals[x_vals >= min_val & x_vals <= max_val]
+  
+  if(length(x_vals) == 0){
+    message(paste("No hay datos para", variable, "en", municipio))
+    return(NULL)
+  }
+  
+  mu <- mean(x_vals)
+  sigma <- sd(x_vals)
+  
+  x_seq <- seq(min(x_vals), max(x_vals), length.out = 100)
+  normal_df <- data.frame(x = x_seq, y = dnorm(x_seq, mean = mu, sd = sigma))
+  
+  ggplot(df_mun, aes(x = .data[[variable]])) +
+    geom_histogram(aes(y = ..density..),
+                   bins = 20,
+                   fill = "skyblue", color = "black", alpha = 0.6) +
+    geom_density(color = "red", size = 1.2) +  # densidad kernel
+    geom_line(data = normal_df, aes(x = x, y = y),
+              color = "blue", size = 1.2, linetype = "dashed") +
+    labs(title = paste("Distribución de", variable, "en", municipio),
+         x = variable, y = "Densidad") +
+    theme_minimal()
+}
+
+# Creamos los 4 gráficos
+g1 <- graficar_distribucion(datos_p2, "price", "Palma de Mallorca", min_val = 50, max_val = 400)
+g2 <- graficar_distribucion(datos_p2, "price", "Pollença", min_val = 50, max_val = 400)
+g3 <- graficar_distribucion(datos_p2, "number_of_reviews", "Palma de Mallorca")
+g4 <- graficar_distribucion(datos_p2, "number_of_reviews", "Pollença")
+
+# Combinamos los graficos en un panel 2x2
+(g1 | g2) / (g3 | g4)
 ```
 
 ::: {.cell-output-display}
 ![](ENUNCIADO_taller_EVALUABLE_ABB_files/figure-html/unnamed-chunk-10-1.png){width=672}
-:::
-
-```{.r .cell-code}
-# --- Graficar para number_of_reviews en Palma y Pollença ---
-plot_distribution(listings0, "number_of_reviews", "Palma", date_filter = "2024-09-13")
-```
-
-::: {.cell-output .cell-output-stdout}
-
-```
-NULL
-```
-
-
-:::
-
-```{.r .cell-code}
-plot_distribution(listings0, "number_of_reviews", "Pollença", date_filter = "2024-09-13")
-```
-
-::: {.cell-output-display}
-![](ENUNCIADO_taller_EVALUABLE_ABB_files/figure-html/unnamed-chunk-10-2.png){width=672}
 :::
 :::
 
@@ -5616,6 +5598,150 @@ Con los datos de `listings0` de todos los periodos, contrastar si la media del p
 
 ### Solución Pregunta 3
 
+::: {.cell}
+
+```{.r .cell-code}
+# Librerías
+library(dplyr)
+
+# Establecemos las variables para los nombres correctos de los municipios
+mun_alcudia <- "Alcúdia"
+mun_palma   <- "Palma de Mallorca"
+
+# Filtramos los datos
+datos_p3 <- listings0 %>%
+  filter(neighbourhood_cleansed %in% c(mun_alcudia, mun_palma),
+         price > 50, price < 400)  # rango de precios indicado en la pregunta
+
+# Extraemos los precios por municipio
+precios_alcudia <- datos_p3$price[datos_p3$neighbourhood_cleansed == mun_alcudia]
+precios_palma   <- datos_p3$price[datos_p3$neighbourhood_cleansed == mun_palma]
+
+# Creamos un test t para las medias independientes, unilateral (greater)
+t_test_res <- t.test(precios_alcudia, precios_palma,
+                     alternative = "greater", var.equal = FALSE)
+
+# Calculamos las medias y diferencia
+mean_alcudia <- mean(precios_alcudia)
+mean_palma   <- mean(precios_palma)
+diff_means   <- mean_alcudia - mean_palma
+
+# Mostramos los resultados
+resumen <- tibble(
+  Municipio = c("Alcúdia", "Palma de Mallorca"),
+  Media = c(mean_alcudia, mean_palma)
+)
+
+resumen
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+# A tibble: 2 × 2
+  Municipio         Media
+  <chr>             <dbl>
+1 Alcúdia            194.
+2 Palma de Mallorca  184.
+```
+
+
+:::
+
+```{.r .cell-code}
+cat("Diferencia de medias:", diff_means, "\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+Diferencia de medias: 10.30995 
+```
+
+
+:::
+
+```{.r .cell-code}
+cat("p-valor:", t_test_res$p.value, "\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+p-valor: 1.265305e-07 
+```
+
+
+:::
+
+```{.r .cell-code}
+cat("Intervalo de confianza 95% de la diferencia: ", t_test_res$conf.int[1], " - ", t_test_res$conf.int[2], "\n\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+Intervalo de confianza 95% de la diferencia:  7.02432  -  Inf 
+```
+
+
+:::
+
+```{.r .cell-code}
+# Justificación técnica
+cat("Interpretación:\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+Interpretación:
+```
+
+
+:::
+
+```{.r .cell-code}
+cat("El p-valor es", signif(t_test_res$p.value,3), "menor que 0.05, por lo que rechazamos la hipótesis nula.\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+El p-valor es 1.27e-07 menor que 0.05, por lo que rechazamos la hipótesis nula.
+```
+
+
+:::
+
+```{.r .cell-code}
+cat("Esto indica que la media de precios en Alcúdia es significativamente mayor que en Palma de Mallorca.\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+Esto indica que la media de precios en Alcúdia es significativamente mayor que en Palma de Mallorca.
+```
+
+
+:::
+
+```{.r .cell-code}
+cat("El intervalo de confianza 95% [", signif(t_test_res$conf.int[1],3), ",", signif(t_test_res$conf.int[2],3),
+    "] confirma que la diferencia de medias es positiva, consistente con el test.\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+El intervalo de confianza 95% [ 7.02 , Inf ] confirma que la diferencia de medias es positiva, consistente con el test.
+```
+
+
+:::
+:::
+
 
 ## Pregunta 4 (**1punto**)
 
@@ -5623,20 +5749,393 @@ Con los  datos de `listings0`, contrastar si las medias de los precios en Alcudi
 
 Haced un diagrama de caja comparativo de los precios  en Alcudia  por periodo y coméntalo.
 
+### Solución Pregunta 4
+
+::: {.cell}
+
+```{.r .cell-code}
+library(dplyr)
+library(ggplot2)
+
+# Nombre correcto de Alcúdia según tu base
+mun_alcudia <- "Alcúdia"
+
+# Fechas a comparar
+periodos <- as.Date(c("2025-06-15", "2025-09-21"))
+
+# Filtrar datos de Alcúdia y rangos de precio razonables
+datos_p4 <- listings0 %>%
+  filter(neighbourhood_cleansed == mun_alcudia,
+         date %in% periodos,
+         price > 0, price < 2000)  # rango amplio
+
+# Comprobar cuántos datos hay por periodo
+table(datos_p4$date)
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+
+2025-06-15 2025-09-21 
+       838        899 
+```
+
+
+:::
+
+```{.r .cell-code}
+# Extraer precios por periodo
+precios_0615 <- datos_p4$price[datos_p4$date == as.Date("2025-06-15")]
+precios_0921 <- datos_p4$price[datos_p4$date == as.Date("2025-09-21")]
+
+# Test t one-sided (H0: medias iguales, H1: 0615 < 0921)
+t_test_res <- t.test(precios_0615, precios_0921,
+                     alternative = "less", var.equal = FALSE)
+
+# Resumen de medias
+res_p4 <- tibble(
+  Periodo = c("2025-06-15", "2025-09-21"),
+  Media = c(mean(precios_0615), mean(precios_0921))
+)
+print(res_p4)
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+# A tibble: 2 × 2
+  Periodo    Media
+  <chr>      <dbl>
+1 2025-06-15  290.
+2 2025-09-21  281.
+```
+
+
+:::
+
+```{.r .cell-code}
+# Diferencia de medias
+diff_means <- mean(precios_0615) - mean(precios_0921)
+cat("Diferencia de medias:", diff_means, "\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+Diferencia de medias: 8.624159 
+```
+
+
+:::
+
+```{.r .cell-code}
+# p-valor
+cat("p-valor:", t_test_res$p.value, "\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+p-valor: 0.8213378 
+```
+
+
+:::
+
+```{.r .cell-code}
+# Intervalo de confianza (95%)
+cat("Intervalo de confianza 95% de la diferencia:", t_test_res$conf.int[1], "-", t_test_res$conf.int[2], "\n\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+Intervalo de confianza 95% de la diferencia: -Inf - 24.03938 
+```
+
+
+:::
+
+```{.r .cell-code}
+# Interpretación
+cat("Interpretación:\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+Interpretación:
+```
+
+
+:::
+
+```{.r .cell-code}
+cat("El p-valor es", round(t_test_res$p.value,3), "mayor que 0.05, por lo que NO rechazamos la hipótesis nula.\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+El p-valor es 0.821 mayor que 0.05, por lo que NO rechazamos la hipótesis nula.
+```
+
+
+:::
+
+```{.r .cell-code}
+cat("Esto indica que no hay evidencia estadística de que los precios en junio sean menores que en septiembre.\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+Esto indica que no hay evidencia estadística de que los precios en junio sean menores que en septiembre.
+```
+
+
+:::
+
+```{.r .cell-code}
+cat("El intervalo de confianza", round(t_test_res$conf.int[1],2), "a", round(t_test_res$conf.int[2],2), "incluye 0, consistente con la no significancia.\n\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+El intervalo de confianza -Inf a 24.04 incluye 0, consistente con la no significancia.
+```
+
+
+:::
+
+```{.r .cell-code}
+# Boxplot comparativo
+ggplot(datos_p4, aes(x = factor(date), y = price, fill = factor(date))) +
+  geom_boxplot(outlier.colour = "red", outlier.size = 2) +
+  labs(
+    title = paste("Comparación de precios en", mun_alcudia, "por periodo"),
+    x = "Periodo",
+    y = "Precio (€)"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+    axis.title.x = element_text(size = 14),
+    axis.title.y = element_text(size = 14),
+    legend.position = "none"
+  ) +
+  scale_fill_brewer(palette = "Set2")
+```
+
+::: {.cell-output-display}
+![](ENUNCIADO_taller_EVALUABLE_ABB_files/figure-html/unnamed-chunk-12-1.png){width=672}
+:::
+:::
+
+
 ## Pregunta 5 (**1 punto**)
 
 Comparar con un bopxlot de las valoraciones medias `review_scores_rating` para Alcudia, Palma, Calvià y
 Pollença. Hacer el gráfico con ggplot2 y todo lujo de destalles.
+
+### Solución Pregunta 5
+
+::: {.cell}
+
+```{.r .cell-code}
+# --- Solución Pregunta 5 (chunk ejecutable) ---
+library(ggplot2)
+# Filtrar los datos para los municipios de interés
+municipios_interes <- c("Alcúdia", "Palma de Mallorca", "Calvià", "Pollença")
+datos_filtrados <- listings0 %>%
+  filter(neighbourhood_cleansed %in% municipios_interes)
+# Crear el boxplot
+ggplot(datos_filtrados, aes(x = neighbourhood_cleansed, y = review_scores_rating, fill = neighbourhood_cleansed)) +
+  geom_boxplot(outlier.colour = "red", outlier.size = 2) +
+  labs(
+    title = "Boxplot de review_scores_rating por municipio",
+    x = "Municipio",
+    y = "Valoración media (review_scores_rating)"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+    axis.title.x = element_text(size = 14),
+    axis.title.y = element_text(size = 14),
+    legend.position = "none"
+  ) +
+  scale_fill_brewer(palette = "Set3")
+```
+
+::: {.cell-output-display}
+![](ENUNCIADO_taller_EVALUABLE_ABB_files/figure-html/unnamed-chunk-13-1.png){width=672}
+:::
+:::
 
 
 ## Pregunta 6 (**1 punto**)
 
 Calcular la proporción de apartamentos de la muestra "2025-09-21" con media de valoración `review_scores_rating` mayor que 4 en Alcudia y en Calvià son iguales contra que son distintas. Construid un intervalo de confianza para la diferencia de proporciones.
 
+### Solución Pregunta 6
+
+::: {.cell}
+
+```{.r .cell-code}
+# --- Solución Pregunta 6 (chunk ejecutable) ---
+library(dplyr)
+# Filtrar los datos para la fecha específica
+fecha_interes <- as.Date("2025-09-21")
+datos_fecha <- listings0 %>%
+  filter(date == fecha_interes)
+# Calcular las proporciones de apartamentos con review_scores_rating > 4
+prop_alcudia <- mean(datos_fecha$review_scores_rating[datos_fecha$neighbourhood_cleansed == "Alcúdia"] > 4, na.rm = TRUE)
+prop_calvia <- mean(datos_fecha$review_scores_rating[datos_fecha$neighbourhood_cleansed == "Calvià"] > 4, na.rm = TRUE)
+# Calcular la diferencia de proporciones
+diff_prop <- prop_alcudia - prop_calvia
+# Calcular el intervalo de confianza para la diferencia de proporciones
+n_alcudia <- sum(datos_fecha$neighbourhood_cleansed == "Alcúdia", na.rm = TRUE)
+n_calvia <- sum(datos_fecha$neighbourhood_cleansed == "Calvià", na.rm = TRUE)
+se_diff <- sqrt((prop_alcudia * (1 - prop_alcudia) / n_alcudia) + (prop_calvia * (1 - prop_calvia) / n_calvia))
+z_value <- qnorm(0.975) # para un 95% de confianza
+ci_lower <- diff_prop - z_value * se_diff
+ci_upper <- diff_prop + z_value * se_diff
+# Resultados
+list(
+  prop_alcudia = prop_alcudia,
+  prop_calvia = prop_calvia,
+  diff_prop = diff_prop,
+  ci_lower = ci_lower,
+  ci_upper = ci_upper
+)
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+$prop_alcudia
+[1] 0.9457965
+
+$prop_calvia
+[1] 0.9352941
+
+$diff_prop
+[1] 0.01050234
+
+$ci_lower
+[1] -0.02792426
+
+$ci_upper
+[1] 0.04892895
+```
+
+
+:::
+:::
+
 
 ## Pregunta 7 (**1punto**)
 
 Calcular la proporción de apartamentos de los periodos 2025-06-15 y  2025-09-21  con media de valoración `review_scores_rating` mayor que 4 en Palma  y en Pollença son iguales contra que son distintas.
+
+### Solución Pregunta 7
+
+::: {.cell}
+
+```{.r .cell-code}
+library(dplyr)
+
+# Fechas de interés
+fechas_interes <- as.Date(c("2025-06-15", "2025-09-21"))
+
+# Filtrar datos para Palma y Pollença
+datos_fechas <- listings0 %>%
+  filter(date %in% fechas_interes,
+         neighbourhood_cleansed %in% c("Palma de Mallorca", "Pollença"))
+
+# Calcular proporciones de apartamentos con review_scores_rating > 4
+prop_palma   <- mean(datos_fechas$review_scores_rating[datos_fechas$neighbourhood_cleansed == "Palma de Mallorca"] > 4, na.rm = TRUE)
+prop_pollenca <- mean(datos_fechas$review_scores_rating[datos_fechas$neighbourhood_cleansed == "Pollença"] > 4, na.rm = TRUE)
+
+# Diferencia de proporciones
+diff_prop <- prop_palma - prop_pollenca
+
+# Número de apartamentos por municipio
+n_palma <- sum(datos_fechas$neighbourhood_cleansed == "Palma de Mallorca", na.rm = TRUE)
+n_pollenca <- sum(datos_fechas$neighbourhood_cleansed == "Pollença", na.rm = TRUE)
+
+# Error estándar de la diferencia de proporciones
+se_diff <- sqrt((prop_palma*(1-prop_palma)/n_palma) + (prop_pollenca*(1-prop_pollenca)/n_pollenca))
+
+# Intervalo de confianza 95%
+z_val <- qnorm(0.975)
+ci_lower <- diff_prop - z_val*se_diff
+ci_upper <- diff_prop + z_val*se_diff
+
+# Estadístico z y p-valor para test de diferencia
+z_stat <- diff_prop / se_diff
+p_val <- 2 * (1 - pnorm(abs(z_stat)))
+
+# Mostrar resultados resumidos
+tibble(
+  Proporcion_Palma = prop_palma,
+  Proporcion_Pollença = prop_pollenca,
+  Diferencia = diff_prop,
+  IC_95 = paste0(round(ci_lower,3), " - ", round(ci_upper,3)),
+  Z = round(z_stat,2),
+  p_valor = signif(p_val,3)
+)
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+# A tibble: 1 × 6
+  Proporcion_Palma Proporcion_Pollença Diferencia IC_95             Z p_valor
+             <dbl>               <dbl>      <dbl> <chr>         <dbl>   <dbl>
+1            0.980               0.918     0.0621 0.049 - 0.075  9.44       0
+```
+
+
+:::
+
+```{.r .cell-code}
+# Interpretación
+cat("Interpretación:\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+Interpretación:
+```
+
+
+:::
+
+```{.r .cell-code}
+if(p_val < 0.05){
+  cat("El p-valor es", signif(p_val,3), "menor que 0.05, por lo que rechazamos la hipótesis nula.\n")
+  cat("Esto indica que las proporciones de apartamentos con review_scores_rating > 4 son significativamente diferentes entre Palma y Pollença.\n")
+} else {
+  cat("El p-valor es", signif(p_val,3), "mayor que 0.05, por lo que NO rechazamos la hipótesis nula.\n")
+  cat("Esto indica que no hay evidencia estadística de que las proporciones de apartamentos con review_scores_rating > 4 sean diferentes entre Palma y Pollença.\n")
+}
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+El p-valor es 0 menor que 0.05, por lo que rechazamos la hipótesis nula.
+Esto indica que las proporciones de apartamentos con review_scores_rating > 4 son significativamente diferentes entre Palma y Pollença.
+```
+
+
+:::
+:::
+
 
 ## Pregunta 8 (**1punto**)
 
@@ -5671,6 +6170,54 @@ table(cut(listings0$review_scores_rating,5),
 
 
 
+### Solución Pregunta 8
+
+::: {.cell}
+
+```{.r .cell-code}
+# --- Solución Pregunta 8 (chunk ejecutable) ---
+library(dplyr)
+# Agrupar las variables en 5 categorías cada una
+listings0 <- listings0 %>%
+  mutate(
+    rating_group = cut(review_scores_rating, breaks = 5, include.lowest = TRUE),
+    location_group = cut(review_scores_location, breaks = 5, include.lowest = TRUE)
+  )
+# Crear la tabla de contingencia
+tabla_contingencia <- table(listings0$rating_group, listings0$location_group)
+# Realizar el test chi-cuadrado de independencia
+chi_test_res <- chisq.test(tabla_contingencia)
+# Calcular el coeficiente de contingencia de Pearson
+chi2_stat <- chi_test_res$statistic
+n_total <- sum(tabla_contingencia)
+coef_contingencia <- sqrt(chi2_stat / (chi2_stat + n_total))
+# Resultados
+list(
+  chi_square_statistic = chi2_stat,
+  p_value = chi_test_res$p.value,
+  coef_contingencia = coef_contingencia
+)
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+$chi_square_statistic
+X-squared 
+ 28398.26 
+
+$p_value
+[1] 0
+
+$coef_contingencia
+X-squared 
+  0.55222 
+```
+
+
+:::
+:::
+
 
 ## Pregunta 9 (**3 puntos**)
 
@@ -5680,6 +6227,143 @@ review_scores_rating, review_scores_cleanliness, review_scores_location, review_
 Calcula la matriz de correlaciones entre estas variables y haz un gráfico de pares  de variables que muestre las correlaciones ([ggpairs](https://r-charts.com/correlation/ggpairs/)) con la librería GGally. Comenta los resultados.
 
 Haz un `matrixplot` de las correlaciones con la librería `corrplot`. Comenta los resultados.
+
+### Solución Pregunta 9
+
+::: {.cell}
+
+```{.r .cell-code}
+library(dplyr)
+library(GGally)
+library(corrplot)
+
+# Construir el dataset con las variables deseadas
+datos_corr <- listings0 %>%
+  select(neighbourhood_cleansed,
+         review_scores_rating,
+         review_scores_cleanliness,
+         review_scores_location,
+         review_scores_value) %>%
+  na.omit()  # eliminar filas con NA para el análisis de correlación
+
+# Calcular matriz de correlaciones
+matriz_cor <- cor(datos_corr %>% select(-neighbourhood_cleansed))
+
+# Mostrar la matriz de correlación
+matriz_cor
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+                          review_scores_rating review_scores_cleanliness
+review_scores_rating                 1.0000000                 0.7113675
+review_scores_cleanliness            0.7113675                 1.0000000
+review_scores_location               0.4643033                 0.3404371
+review_scores_value                  0.7843710                 0.6473522
+                          review_scores_location review_scores_value
+review_scores_rating                   0.4643033           0.7843710
+review_scores_cleanliness              0.3404371           0.6473522
+review_scores_location                 1.0000000           0.4802211
+review_scores_value                    0.4802211           1.0000000
+```
+
+
+:::
+
+```{.r .cell-code}
+# Gráfico de pares con ggpairs (incluye correlaciones en la diagonal)
+ggpairs(datos_corr %>% select(-neighbourhood_cleansed),
+        upper = list(continuous = wrap("cor", size = 4)),
+        lower = list(continuous = wrap("points", alpha = 0.4)),
+        diag = list(continuous = wrap("densityDiag", alpha = 0.5))) +
+  ggtitle("Gráfico de pares y correlaciones entre variables de review_scores") +
+  theme_minimal()
+```
+
+::: {.cell-output-display}
+![](ENUNCIADO_taller_EVALUABLE_ABB_files/figure-html/unnamed-chunk-18-1.png){width=672}
+:::
+
+```{.r .cell-code}
+# Matrixplot de las correlaciones con corrplot
+corrplot(matriz_cor, method = "color", addCoef.col = "black",
+         tl.col = "black", tl.srt = 45, number.cex = 0.8,
+         title = "Matriz de correlaciones - corrplot",
+         mar=c(0,0,1,0))
+```
+
+::: {.cell-output-display}
+![](ENUNCIADO_taller_EVALUABLE_ABB_files/figure-html/unnamed-chunk-18-2.png){width=672}
+:::
+
+```{.r .cell-code}
+# Interpretación:
+cat("Interpretación:\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+Interpretación:
+```
+
+
+:::
+
+```{.r .cell-code}
+cat("Las variables de review_scores muestran correlaciones positivas moderadas a fuertes entre sí.\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+Las variables de review_scores muestran correlaciones positivas moderadas a fuertes entre sí.
+```
+
+
+:::
+
+```{.r .cell-code}
+cat("Por ejemplo, review_scores_rating tiene una alta correlación con review_scores_cleanliness y review_scores_location,\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+Por ejemplo, review_scores_rating tiene una alta correlación con review_scores_cleanliness y review_scores_location,
+```
+
+
+:::
+
+```{.r .cell-code}
+cat("lo que sugiere que apartamentos mejor valorados tienden a tener mejores puntuaciones en limpieza y ubicación.\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+lo que sugiere que apartamentos mejor valorados tienden a tener mejores puntuaciones en limpieza y ubicación.
+```
+
+
+:::
+
+```{.r .cell-code}
+cat("El gráfico de pares muestra relaciones lineales entre las variables, confirmando la correlación observada.\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+El gráfico de pares muestra relaciones lineales entre las variables, confirmando la correlación observada.
+```
+
+
+:::
+:::
+
 
 ## Pregunta 10 (**2 puntos**)
 
@@ -5719,7 +6403,7 @@ barplot(table(length_rewiews))
 ```
 
 ::: {.cell-output-display}
-![](ENUNCIADO_taller_EVALUABLE_ABB_files/figure-html/unnamed-chunk-12-1.png){width=672}
+![](ENUNCIADO_taller_EVALUABLE_ABB_files/figure-html/unnamed-chunk-19-1.png){width=672}
 :::
 
 ```{.r .cell-code}
@@ -5729,7 +6413,7 @@ barplot(table(length_description))
 ```
 
 ::: {.cell-output-display}
-![](ENUNCIADO_taller_EVALUABLE_ABB_files/figure-html/unnamed-chunk-12-2.png){width=672}
+![](ENUNCIADO_taller_EVALUABLE_ABB_files/figure-html/unnamed-chunk-19-2.png){width=672}
 :::
 :::
 
@@ -5889,4 +6573,273 @@ F-statistic:  5237 on 1 and 580 DF,  p-value: < 2.2e-16
 :::
 
 
+### Solución Pregunta 10
+
+::: {.cell}
+
+```{.r .cell-code}
+library(dplyr)
+library(stringr)
+library(ggplot2)
+
+# -----------------------------
+# 1. Longitudes de palabras en reviews
+# -----------------------------
+length_reviews <- str_count(reviews$comments, "\\w+")  # contar palabras en cada comentario
+
+# Tabla de frecuencias
+freq_reviews <- table(length_reviews)
+tbl_reviews <- tibble(
+  L = as.numeric(names(freq_reviews)),
+  Freq = as.numeric(freq_reviews),
+  Rank = rank(-as.numeric(freq_reviews), ties.method = "first"),
+  Log_Freq = log(as.numeric(freq_reviews)),
+  Log_Rank = log(rank(-as.numeric(freq_reviews), ties.method = "first"))
+)
+
+# Filtrar rangos razonables
+tbl_reviews_f <- tbl_reviews %>% filter(Rank > 10 & Rank < 1000)
+
+# -----------------------------
+# 2. Regresiones lineales
+# -----------------------------
+# Freq ~ Rank
+fit1 <- lm(Freq ~ Rank, data = tbl_reviews_f)
+summary(fit1)
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+
+Call:
+lm(formula = Freq ~ Rank, data = tbl_reviews_f)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-996.3 -758.4 -196.9  430.9 3754.3 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 2076.349     81.469   25.49   <2e-16 ***
+Rank          -4.965      0.236  -21.04   <2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 956.7 on 580 degrees of freedom
+Multiple R-squared:  0.4328,	Adjusted R-squared:  0.4318 
+F-statistic: 442.5 on 1 and 580 DF,  p-value: < 2.2e-16
+```
+
+
+:::
+
+```{.r .cell-code}
+# Freq ~ log(Rank)
+fit2 <- lm(Freq ~ Log_Rank, data = tbl_reviews_f)
+summary(fit2)
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+
+Call:
+lm(formula = Freq ~ Log_Rank, data = tbl_reviews_f)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-826.00 -535.02    0.05  427.46 1477.41 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  7980.43     154.44   51.67   <2e-16 ***
+Log_Rank    -1356.23      27.97  -48.48   <2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 565.1 on 580 degrees of freedom
+Multiple R-squared:  0.8021,	Adjusted R-squared:  0.8018 
+F-statistic:  2351 on 1 and 580 DF,  p-value: < 2.2e-16
+```
+
+
+:::
+
+```{.r .cell-code}
+# log(Freq) ~ log(Rank)  (esto es lo que se ajusta a Zipf)
+fit3 <- lm(Log_Freq ~ Log_Rank, data = tbl_reviews_f)
+summary(fit3)
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+
+Call:
+lm(formula = Log_Freq ~ Log_Rank, data = tbl_reviews_f)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.3768 -0.4073 -0.0811  0.3706  1.5582 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 20.63954    0.22680   91.00   <2e-16 ***
+Log_Rank    -3.16999    0.04108  -77.17   <2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.8299 on 580 degrees of freedom
+Multiple R-squared:  0.9112,	Adjusted R-squared:  0.9111 
+F-statistic:  5955 on 1 and 580 DF,  p-value: < 2.2e-16
+```
+
+
+:::
+
+```{.r .cell-code}
+# -----------------------------
+# 3. Gráficos
+# -----------------------------
+# a) Histograma de frecuencias
+ggplot(tbl_reviews, aes(x = L, y = Freq)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  scale_y_log10() +
+  labs(title = "Frecuencia de longitudes de comentarios (log-scale)",
+       x = "Número de palabras", y = "Frecuencia (log10)") +
+  theme_minimal()
+```
+
+::: {.cell-output-display}
+![](ENUNCIADO_taller_EVALUABLE_ABB_files/figure-html/unnamed-chunk-22-1.png){width=672}
+:::
+
+```{.r .cell-code}
+# b) Log-log plot para Zipf
+ggplot(tbl_reviews_f, aes(x = Log_Rank, y = Log_Freq)) +
+  geom_point(color = "red", alpha = 0.6) +
+  geom_smooth(method = "lm", color = "blue") +
+  labs(title = "Ley de Zipf: log(Frecuencia) vs log(Rango)",
+       x = "log(Rango)", y = "log(Frecuencia)") +
+  theme_minimal()
+```
+
+::: {.cell-output-display}
+![](ENUNCIADO_taller_EVALUABLE_ABB_files/figure-html/unnamed-chunk-22-2.png){width=672}
+:::
+
+```{.r .cell-code}
+# -----------------------------
+# 4. Para descriptions de listings0
+# -----------------------------
+length_desc <- str_count(listings0$description, "\\w+")
+freq_desc <- table(length_desc)
+tbl_desc <- tibble(
+  L = as.numeric(names(freq_desc)),
+  Freq = as.numeric(freq_desc),
+  Rank = rank(-as.numeric(freq_desc), ties.method = "first"),
+  Log_Freq = log(as.numeric(freq_desc)),
+  Log_Rank = log(rank(-as.numeric(freq_desc), ties.method = "first"))
+)
+tbl_desc_f <- tbl_desc %>% filter(Rank > 10 & Rank < 1000)
+
+fit_desc <- lm(Log_Freq ~ Log_Rank, data = tbl_desc_f)
+summary(fit_desc)
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+
+Call:
+lm(formula = Log_Freq ~ Log_Rank, data = tbl_desc_f)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.6301 -0.9624 -0.1638  1.0706  1.7943 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  15.6074     0.6660   23.43   <2e-16 ***
+Log_Rank     -2.6186     0.1577  -16.60   <2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.175 on 131 degrees of freedom
+Multiple R-squared:  0.6778,	Adjusted R-squared:  0.6754 
+F-statistic: 275.6 on 1 and 131 DF,  p-value: < 2.2e-16
+```
+
+
+:::
+
+```{.r .cell-code}
+ggplot(tbl_desc_f, aes(x = Log_Rank, y = Log_Freq)) +
+  geom_point(color = "darkgreen", alpha = 0.6) +
+  geom_smooth(method = "lm", color = "black") +
+  labs(title = "Ley de Zipf: descriptions de listings0",
+       x = "log(Rango)", y = "log(Frecuencia)") +
+  theme_minimal()
+```
+
+::: {.cell-output-display}
+![](ENUNCIADO_taller_EVALUABLE_ABB_files/figure-html/unnamed-chunk-22-3.png){width=672}
+:::
+
+```{.r .cell-code}
+# -----------------------------
+# 5. Interpretación
+# -----------------------------
+cat("Interpretación:\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+Interpretación:
+```
+
+
+:::
+
+```{.r .cell-code}
+cat("Al realizar la regresión log(Frecuencia) ~ log(Rango) para comentarios y descripciones, se observa que los datos siguen aproximadamente una relación lineal en escala log-log.\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+Al realizar la regresión log(Frecuencia) ~ log(Rango) para comentarios y descripciones, se observa que los datos siguen aproximadamente una relación lineal en escala log-log.
+```
+
+
+:::
+
+```{.r .cell-code}
+cat("Esto confirma que la Ley de Zipf se ajusta razonablemente a la distribución de longitudes de comentarios y descripciones.\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+Esto confirma que la Ley de Zipf se ajusta razonablemente a la distribución de longitudes de comentarios y descripciones.
+```
+
+
+:::
+
+```{.r .cell-code}
+cat("Las pendientes negativas indican que las longitudes más frecuentes son pocas palabras, y la frecuencia decrece con el rango, como predice la ley.\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+Las pendientes negativas indican que las longitudes más frecuentes son pocas palabras, y la frecuencia decrece con el rango, como predice la ley.
+```
+
+
+:::
+:::
 
