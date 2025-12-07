@@ -5517,28 +5517,17 @@ Pollença
 ::: {.cell}
 
 ```{.r .cell-code}
-# Librerías
-library(dplyr)
+# --- Solución Gráficos Solapados ---
+#Librerías
 library(ggplot2)
 library(patchwork)
+library(dplyr)
 
 # Revisamos las fechas disponibles
-unique(listings0$date)
-```
+# unique(listings0$date)
 
-::: {.cell-output .cell-output-stdout}
-
-```
-[1] "2023-12-17" "2024-03-23" "2024-06-19" "2024-09-13" "2024-12-14"
-[6] "2025-03-07" "2025-06-15" "2025-09-21"
-```
-
-
-:::
-
-```{.r .cell-code}
-# Elegimos una fecha que exista, por ejemplo la última
-fecha_filtrar <- max(listings0$date)
+# Elegimos una fecha que exista (ajusta esto si es necesario)
+fecha_filtrar <- max(listings0$date, na.rm = TRUE)
 
 # Filtramos los datos
 datos_p2 <- listings0 %>%
@@ -5568,22 +5557,35 @@ graficar_distribucion <- function(df, variable, municipio, min_val = -Inf, max_v
     geom_histogram(aes(y = ..density..),
                    bins = 20,
                    fill = "skyblue", color = "black", alpha = 0.6) +
-    geom_density(color = "red", size = 1.2) +  # densidad kernel
+    geom_density(color = "red", size = 1) +  # densidad kernel
     geom_line(data = normal_df, aes(x = x, y = y),
-              color = "blue", size = 1.2, linetype = "dashed") +
-    labs(title = paste("Distribución de", variable, "en", municipio),
-         x = variable, y = "Densidad") +
-    theme_minimal()
+              color = "blue", size = 1, linetype = "dashed") +
+    # --- CAMBIOS AQUÍ PARA EVITAR SOLAPAMIENTO ---
+    labs(
+      # Usamos paste0 y \n para forzar un salto de línea
+      title = paste0("Distribución de ", variable, "\n(", municipio, ")"),
+      x = variable, 
+      y = "Densidad"
+    ) +
+    theme_minimal() +
+    theme(
+      # Reducimos el tamaño del título y lo centramos
+      plot.title = element_text(size = 10, face = "bold", hjust = 0.5),
+      axis.title = element_text(size = 9)
+    )
 }
 
 # Creamos los 4 gráficos
-g1 <- graficar_distribucion(datos_p2, "price", "Palma de Mallorca", min_val = 50, max_val = 400)
-g2 <- graficar_distribucion(datos_p2, "price", "Pollença", min_val = 50, max_val = 400)
+g1 <- graficar_distribucion(datos_p2, "price", "Palma de Mallorca", min_val = 0, max_val = 400)
+g2 <- graficar_distribucion(datos_p2, "price", "Pollença", min_val = 0, max_val = 400)
 g3 <- graficar_distribucion(datos_p2, "number_of_reviews", "Palma de Mallorca")
 g4 <- graficar_distribucion(datos_p2, "number_of_reviews", "Pollença")
 
-# Combinamos los graficos en un panel 2x2
-(g1 | g2) / (g3 | g4)
+# Combinamos los gráficos
+# plot_annotation añade un título general y márgenes extra para que respiren
+(g1 | g2) / (g3 | g4) + 
+  plot_annotation(title = "Comparativa de Distribuciones",
+                  theme = theme(plot.title = element_text(size = 14, hjust = 0.5)))
 ```
 
 ::: {.cell-output-display}
@@ -5601,9 +5603,6 @@ Con los datos de `listings0` de todos los periodos, contrastar si la media del p
 ::: {.cell}
 
 ```{.r .cell-code}
-# Librerías
-library(dplyr)
-
 # Establecemos las variables para los nombres correctos de los municipios
 mun_alcudia <- "Alcúdia"
 mun_palma   <- "Palma de Mallorca"
@@ -5754,22 +5753,19 @@ Haced un diagrama de caja comparativo de los precios  en Alcudia  por periodo y 
 ::: {.cell}
 
 ```{.r .cell-code}
-library(dplyr)
-library(ggplot2)
-
-# Nombre correcto de Alcúdia según tu base
+# Establecemos la variable para el nombre correcto del municipio
 mun_alcudia <- "Alcúdia"
 
-# Fechas a comparar
+# Establecemos las fechas a comparar
 periodos <- as.Date(c("2025-06-15", "2025-09-21"))
 
-# Filtrar datos de Alcúdia y rangos de precio razonables
+# Filtramos los datos de Alcúdia y rangos de precio razonables
 datos_p4 <- listings0 %>%
   filter(neighbourhood_cleansed == mun_alcudia,
          date %in% periodos,
-         price > 0, price < 2000)  # rango amplio
+         price > 0, price < 2000)
 
-# Comprobar cuántos datos hay por periodo
+# Comprobamos cuántos datos hay por periodo
 table(datos_p4$date)
 ```
 
@@ -5785,15 +5781,15 @@ table(datos_p4$date)
 :::
 
 ```{.r .cell-code}
-# Extraer precios por periodo
+# Extraemos los precios por periodo
 precios_0615 <- datos_p4$price[datos_p4$date == as.Date("2025-06-15")]
 precios_0921 <- datos_p4$price[datos_p4$date == as.Date("2025-09-21")]
 
-# Test t one-sided (H0: medias iguales, H1: 0615 < 0921)
+# Creamos un test t one-sided (H0: medias iguales, H1: 0615 < 0921)
 t_test_res <- t.test(precios_0615, precios_0921,
                      alternative = "less", var.equal = FALSE)
 
-# Resumen de medias
+# Establecemos un resumen de medias
 res_p4 <- tibble(
   Periodo = c("2025-06-15", "2025-09-21"),
   Media = c(mean(precios_0615), mean(precios_0921))
@@ -5815,7 +5811,7 @@ print(res_p4)
 :::
 
 ```{.r .cell-code}
-# Diferencia de medias
+# Mostramos la diferencia de medias
 diff_means <- mean(precios_0615) - mean(precios_0921)
 cat("Diferencia de medias:", diff_means, "\n")
 ```
@@ -5911,7 +5907,7 @@ El intervalo de confianza -Inf a 24.04 incluye 0, consistente con la no signific
 :::
 
 ```{.r .cell-code}
-# Boxplot comparativo
+# Creamos un boxplot comparativo
 ggplot(datos_p4, aes(x = factor(date), y = price, fill = factor(date))) +
   geom_boxplot(outlier.colour = "red", outlier.size = 2) +
   labs(
@@ -5945,13 +5941,12 @@ Pollença. Hacer el gráfico con ggplot2 y todo lujo de destalles.
 ::: {.cell}
 
 ```{.r .cell-code}
-# --- Solución Pregunta 5 (chunk ejecutable) ---
-library(ggplot2)
-# Filtrar los datos para los municipios de interés
+# Filtramos los datos para los municipios de interés
 municipios_interes <- c("Alcúdia", "Palma de Mallorca", "Calvià", "Pollença")
 datos_filtrados <- listings0 %>%
   filter(neighbourhood_cleansed %in% municipios_interes)
-# Crear el boxplot
+
+# Creamos el boxplot
 ggplot(datos_filtrados, aes(x = neighbourhood_cleansed, y = review_scores_rating, fill = neighbourhood_cleansed)) +
   geom_boxplot(outlier.colour = "red", outlier.size = 2) +
   labs(
@@ -5984,25 +5979,27 @@ Calcular la proporción de apartamentos de la muestra "2025-09-21" con media de 
 ::: {.cell}
 
 ```{.r .cell-code}
-# --- Solución Pregunta 6 (chunk ejecutable) ---
-library(dplyr)
-# Filtrar los datos para la fecha específica
+# Filtramos los datos para la fecha específica
 fecha_interes <- as.Date("2025-09-21")
 datos_fecha <- listings0 %>%
   filter(date == fecha_interes)
-# Calcular las proporciones de apartamentos con review_scores_rating > 4
+
+# Calculamos las proporciones de apartamentos con review_scores_rating > 4
 prop_alcudia <- mean(datos_fecha$review_scores_rating[datos_fecha$neighbourhood_cleansed == "Alcúdia"] > 4, na.rm = TRUE)
 prop_calvia <- mean(datos_fecha$review_scores_rating[datos_fecha$neighbourhood_cleansed == "Calvià"] > 4, na.rm = TRUE)
-# Calcular la diferencia de proporciones
+
+# Calculamos la diferencia de proporciones
 diff_prop <- prop_alcudia - prop_calvia
-# Calcular el intervalo de confianza para la diferencia de proporciones
+
+# Calculamos el intervalo de confianza para la diferencia de proporciones
 n_alcudia <- sum(datos_fecha$neighbourhood_cleansed == "Alcúdia", na.rm = TRUE)
 n_calvia <- sum(datos_fecha$neighbourhood_cleansed == "Calvià", na.rm = TRUE)
 se_diff <- sqrt((prop_alcudia * (1 - prop_alcudia) / n_alcudia) + (prop_calvia * (1 - prop_calvia) / n_calvia))
 z_value <- qnorm(0.975) # para un 95% de confianza
 ci_lower <- diff_prop - z_value * se_diff
 ci_upper <- diff_prop + z_value * se_diff
-# Resultados
+
+# Mostramos los resultados
 list(
   prop_alcudia = prop_alcudia,
   prop_calvia = prop_calvia,
@@ -6045,40 +6042,38 @@ Calcular la proporción de apartamentos de los periodos 2025-06-15 y  2025-09-21
 ::: {.cell}
 
 ```{.r .cell-code}
-library(dplyr)
-
-# Fechas de interés
+# Establecemos las fechas de interés
 fechas_interes <- as.Date(c("2025-06-15", "2025-09-21"))
 
-# Filtrar datos para Palma y Pollença
+# Filtramos los datos para Palma y Pollença
 datos_fechas <- listings0 %>%
   filter(date %in% fechas_interes,
          neighbourhood_cleansed %in% c("Palma de Mallorca", "Pollença"))
 
-# Calcular proporciones de apartamentos con review_scores_rating > 4
+# Calculamos las proporciones de apartamentos con review_scores_rating > 4
 prop_palma   <- mean(datos_fechas$review_scores_rating[datos_fechas$neighbourhood_cleansed == "Palma de Mallorca"] > 4, na.rm = TRUE)
 prop_pollenca <- mean(datos_fechas$review_scores_rating[datos_fechas$neighbourhood_cleansed == "Pollença"] > 4, na.rm = TRUE)
 
-# Diferencia de proporciones
+# Mostramos la diferencia de proporciones
 diff_prop <- prop_palma - prop_pollenca
 
-# Número de apartamentos por municipio
+# Mostramos el número de apartamentos por municipio
 n_palma <- sum(datos_fechas$neighbourhood_cleansed == "Palma de Mallorca", na.rm = TRUE)
 n_pollenca <- sum(datos_fechas$neighbourhood_cleansed == "Pollença", na.rm = TRUE)
 
-# Error estándar de la diferencia de proporciones
+# Calculamos el error estándar de la diferencia de proporciones
 se_diff <- sqrt((prop_palma*(1-prop_palma)/n_palma) + (prop_pollenca*(1-prop_pollenca)/n_pollenca))
 
-# Intervalo de confianza 95%
+# Establecemos un intervalo de confianza 95%
 z_val <- qnorm(0.975)
 ci_lower <- diff_prop - z_val*se_diff
 ci_upper <- diff_prop + z_val*se_diff
 
-# Estadístico z y p-valor para test de diferencia
+# Creamos una estadística z y p-valor para test de diferencia
 z_stat <- diff_prop / se_diff
 p_val <- 2 * (1 - pnorm(abs(z_stat)))
 
-# Mostrar resultados resumidos
+# Mostramos los resultados resumidos
 tibble(
   Proporcion_Palma = prop_palma,
   Proporcion_Pollença = prop_pollenca,
@@ -6175,23 +6170,24 @@ table(cut(listings0$review_scores_rating,5),
 ::: {.cell}
 
 ```{.r .cell-code}
-# --- Solución Pregunta 8 (chunk ejecutable) ---
-library(dplyr)
-# Agrupar las variables en 5 categorías cada una
+# Agrupamos las variables en 5 categorías cada una
 listings0 <- listings0 %>%
   mutate(
     rating_group = cut(review_scores_rating, breaks = 5, include.lowest = TRUE),
     location_group = cut(review_scores_location, breaks = 5, include.lowest = TRUE)
   )
-# Crear la tabla de contingencia
+# Creamos la tabla de contingencia
 tabla_contingencia <- table(listings0$rating_group, listings0$location_group)
-# Realizar el test chi-cuadrado de independencia
+
+# Realizamos el test chi-cuadrado de independencia
 chi_test_res <- chisq.test(tabla_contingencia)
-# Calcular el coeficiente de contingencia de Pearson
+
+# Calculamos el coeficiente de contingencia de Pearson
 chi2_stat <- chi_test_res$statistic
 n_total <- sum(tabla_contingencia)
 coef_contingencia <- sqrt(chi2_stat / (chi2_stat + n_total))
-# Resultados
+
+# Mostramos los resultados
 list(
   chi_square_statistic = chi2_stat,
   p_value = chi_test_res$p.value,
@@ -6233,23 +6229,23 @@ Haz un `matrixplot` de las correlaciones con la librería `corrplot`. Comenta lo
 ::: {.cell}
 
 ```{.r .cell-code}
-library(dplyr)
+#Librerías
 library(GGally)
 library(corrplot)
 
-# Construir el dataset con las variables deseadas
+# Construimos el dataset con las variables deseadas
 datos_corr <- listings0 %>%
   select(neighbourhood_cleansed,
          review_scores_rating,
          review_scores_cleanliness,
          review_scores_location,
          review_scores_value) %>%
-  na.omit()  # eliminar filas con NA para el análisis de correlación
+  na.omit()  
 
-# Calcular matriz de correlaciones
+# Calculamos la matriz de correlaciones
 matriz_cor <- cor(datos_corr %>% select(-neighbourhood_cleansed))
 
-# Mostrar la matriz de correlación
+# Mostrarmos la matriz de correlación
 matriz_cor
 ```
 
@@ -6272,7 +6268,7 @@ review_scores_value                    0.4802211           1.0000000
 :::
 
 ```{.r .cell-code}
-# Gráfico de pares con ggpairs (incluye correlaciones en la diagonal)
+# Creamos un gráfico de pares con ggpairs
 ggpairs(datos_corr %>% select(-neighbourhood_cleansed),
         upper = list(continuous = wrap("cor", size = 4)),
         lower = list(continuous = wrap("points", alpha = 0.4)),
@@ -6286,7 +6282,7 @@ ggpairs(datos_corr %>% select(-neighbourhood_cleansed),
 :::
 
 ```{.r .cell-code}
-# Matrixplot de las correlaciones con corrplot
+# Creamos una matrixplot de las correlaciones con corrplot
 corrplot(matriz_cor, method = "color", addCoef.col = "black",
          tl.col = "black", tl.srt = 45, number.cex = 0.8,
          title = "Matriz de correlaciones - corrplot",
@@ -6375,7 +6371,9 @@ Como ayuda estudiar el siguiente código, utilizadlo y comentadlo.
 ::: {.cell}
 
 ```{.r .cell-code}
+#Librerías
 library(stringr)
+
 # para las reseñas
 head(reviews)
 ```
@@ -6578,16 +6576,10 @@ F-statistic:  5237 on 1 and 580 DF,  p-value: < 2.2e-16
 ::: {.cell}
 
 ```{.r .cell-code}
-library(dplyr)
-library(stringr)
-library(ggplot2)
-
-# -----------------------------
-# 1. Longitudes de palabras en reviews
-# -----------------------------
+# Establecemos las longitudes de palabras en reviews
 length_reviews <- str_count(reviews$comments, "\\w+")  # contar palabras en cada comentario
 
-# Tabla de frecuencias
+# Cramos una tabla de frecuencias
 freq_reviews <- table(length_reviews)
 tbl_reviews <- tibble(
   L = as.numeric(names(freq_reviews)),
@@ -6597,12 +6589,9 @@ tbl_reviews <- tibble(
   Log_Rank = log(rank(-as.numeric(freq_reviews), ties.method = "first"))
 )
 
-# Filtrar rangos razonables
+# Filtramos por rangos razonables
 tbl_reviews_f <- tbl_reviews %>% filter(Rank > 10 & Rank < 1000)
 
-# -----------------------------
-# 2. Regresiones lineales
-# -----------------------------
 # Freq ~ Rank
 fit1 <- lm(Freq ~ Rank, data = tbl_reviews_f)
 summary(fit1)
@@ -6699,10 +6688,7 @@ F-statistic:  5955 on 1 and 580 DF,  p-value: < 2.2e-16
 :::
 
 ```{.r .cell-code}
-# -----------------------------
-# 3. Gráficos
-# -----------------------------
-# a) Histograma de frecuencias
+# Histograma de frecuencias
 ggplot(tbl_reviews, aes(x = L, y = Freq)) +
   geom_bar(stat = "identity", fill = "skyblue") +
   scale_y_log10() +
@@ -6716,7 +6702,7 @@ ggplot(tbl_reviews, aes(x = L, y = Freq)) +
 :::
 
 ```{.r .cell-code}
-# b) Log-log plot para Zipf
+# Log-log plot para Zipf
 ggplot(tbl_reviews_f, aes(x = Log_Rank, y = Log_Freq)) +
   geom_point(color = "red", alpha = 0.6) +
   geom_smooth(method = "lm", color = "blue") +
@@ -6730,9 +6716,7 @@ ggplot(tbl_reviews_f, aes(x = Log_Rank, y = Log_Freq)) +
 :::
 
 ```{.r .cell-code}
-# -----------------------------
-# 4. Para descriptions de listings0
-# -----------------------------
+# Establecemos para descriptions de listings0
 length_desc <- str_count(listings0$description, "\\w+")
 freq_desc <- table(length_desc)
 tbl_desc <- tibble(
@@ -6788,58 +6772,149 @@ ggplot(tbl_desc_f, aes(x = Log_Rank, y = Log_Freq)) +
 :::
 
 ```{.r .cell-code}
-# -----------------------------
-# 5. Interpretación
-# -----------------------------
-cat("Interpretación:\n")
+# ============================================================
+# 5. Interpretación final (MEJORADA)
+# ============================================================
+
+cat("\nINTERPRETACIÓN:\n\n")
 ```
 
 ::: {.cell-output .cell-output-stdout}
 
 ```
-Interpretación:
+
+INTERPRETACIÓN:
 ```
 
 
 :::
 
 ```{.r .cell-code}
-cat("Al realizar la regresión log(Frecuencia) ~ log(Rango) para comentarios y descripciones, se observa que los datos siguen aproximadamente una relación lineal en escala log-log.\n")
+cat("1) Análisis Visual:\n",
+    "   - En los comentarios (reviews), el gráfico log-log tiende a la linealidad típica de Zipf.\n",
+    "   - En las descripciones, aunque la tendencia general es negativa, se observa una curvatura o 'meseta'\n",
+    "     que indica que la Ley de Zipf se cumple solo parcialmente o de forma aproximada.\n\n")
 ```
 
 ::: {.cell-output .cell-output-stdout}
 
 ```
-Al realizar la regresión log(Frecuencia) ~ log(Rango) para comentarios y descripciones, se observa que los datos siguen aproximadamente una relación lineal en escala log-log.
+1) Análisis Visual:
+    - En los comentarios (reviews), el gráfico log-log tiende a la linealidad típica de Zipf.
+    - En las descripciones, aunque la tendencia general es negativa, se observa una curvatura o 'meseta'
+      que indica que la Ley de Zipf se cumple solo parcialmente o de forma aproximada.
 ```
 
 
 :::
 
 ```{.r .cell-code}
-cat("Esto confirma que la Ley de Zipf se ajusta razonablemente a la distribución de longitudes de comentarios y descripciones.\n")
+cat("2) Evidencia Estadística (Regresiones log(Freq) ~ log(Rank)):\n")
 ```
 
 ::: {.cell-output .cell-output-stdout}
 
 ```
-Esto confirma que la Ley de Zipf se ajusta razonablemente a la distribución de longitudes de comentarios y descripciones.
+2) Evidencia Estadística (Regresiones log(Freq) ~ log(Rank)):
 ```
 
 
 :::
 
 ```{.r .cell-code}
-cat("Las pendientes negativas indican que las longitudes más frecuentes son pocas palabras, y la frecuencia decrece con el rango, como predice la ley.\n")
+cat("   - Pendiente negativa: Confirmada en ambos casos (a mayor rango, menor frecuencia).\n")
 ```
 
 ::: {.cell-output .cell-output-stdout}
 
 ```
-Las pendientes negativas indican que las longitudes más frecuentes son pocas palabras, y la frecuencia decrece con el rango, como predice la ley.
+   - Pendiente negativa: Confirmada en ambos casos (a mayor rango, menor frecuencia).
+```
+
+
+:::
+
+```{.r .cell-code}
+cat("   - Significancia: El p-value < 0.001 confirma que la relación no es aleatoria.\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+   - Significancia: El p-value < 0.001 confirma que la relación no es aleatoria.
+```
+
+
+:::
+
+```{.r .cell-code}
+cat("   - Calidad del ajuste (R²):\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+   - Calidad del ajuste (R²):
+```
+
+
+:::
+
+```{.r .cell-code}
+cat("       * Reviews: Alto (> 0.85), ajuste fuerte al modelo de potencia.\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+       * Reviews: Alto (> 0.85), ajuste fuerte al modelo de potencia.
+```
+
+
+:::
+
+```{.r .cell-code}
+cat("       * Descriptions: Moderado (0.6–0.8). El modelo lineal captura la caída general,\n",
+    "         pero no explica la variabilidad en los rangos medios (la curvatura observada).\n\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+       * Descriptions: Moderado (0.6–0.8). El modelo lineal captura la caída general,
+          pero no explica la variabilidad en los rangos medios (la curvatura observada).
+```
+
+
+:::
+
+```{.r .cell-code}
+cat("3) Conclusión Final:\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+3) Conclusión Final:
+```
+
+
+:::
+
+```{.r .cell-code}
+cat("   La Ley de Zipf es un modelo excelente para la longitud de los comentarios.\n",
+    "   Para las descripciones, aunque existe una relación inversa significativa entre frecuencia y rango,\n",
+    "   la distribución es más compleja que una simple ley de potencia pura.\n")
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+   La Ley de Zipf es un modelo excelente para la longitud de los comentarios.
+    Para las descripciones, aunque existe una relación inversa significativa entre frecuencia y rango,
+    la distribución es más compleja que una simple ley de potencia pura.
 ```
 
 
 :::
 :::
-
